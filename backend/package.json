@@ -1,0 +1,41 @@
+{
+  "name": "mesto-express",
+  "version": "0.0.1",
+  "description": "backend of project Mesto",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PavPar/express-mesto.git"
+  },
+  "author": "PavPar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PavPar/express-mesto/issues"
+  },
+  "homepage": "https://github.com/PavPar/express-mesto#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "celebrate": "^13.0.4",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-winston": "^4.0.5",
+    "jest": "^26.6.3",
+    "joi": "^17.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.9",
+    "validator": "^13.5.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.5"
+  }
+}
