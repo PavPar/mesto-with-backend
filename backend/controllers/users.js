@@ -24,7 +24,7 @@ const handleError = (err) => {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send({ users }))
+    .then((users) => res.send(Object.values(users)))
     .catch((err) => handleError(err))
     .catch((err) => next(err));
 };
@@ -32,7 +32,7 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => { throw new ErrorHandler.NotFoundError('Такого пользователя нет'); })
-    .then((userData) => res.send({ user: userData }))
+    .then((userData) => res.send(userData))
     .catch((err) => handleError(err))
     .catch((err) => next(err));
 };
@@ -45,7 +45,7 @@ module.exports.updateUserInfo = (req, res, next) => {
       runValidators: true,
     })
     .orFail(() => { throw new ErrorHandler.NotFoundError('Такого пользователя нет'); })
-    .then((users) => res.send({ users }))
+    .then((users) => res.send(Object.values(users)))
     .catch((err) => handleError(err))
     .catch((err) => next(err));
 };
@@ -58,7 +58,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       runValidators: true,
     })
     .orFail(() => { throw new ErrorHandler.NotFoundError('Такого пользователя нет'); })
-    .then((users) => res.send({ users }))
+    .then((users) => res.send(Object.values(users)))
     .catch((err) => handleError(err))
     .catch((err) => next(err));
 };

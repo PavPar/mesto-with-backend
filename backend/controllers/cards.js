@@ -27,7 +27,7 @@ const handleError = (err) => {
 
 module.exports.getCards = (req, res, next) => Card.find({})
   .then((cards) => {
-    res.send(Object.values(cards)[0]);
+    res.send(Object.values(cards));
   })
   .catch((err) => next(err));
 
@@ -52,7 +52,7 @@ module.exports.deleteCard = (req, res, next) => {
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((cards) => res.send(cards))
+    .then((cards) => res.send(Object.values(cards)))
     .catch((err) => handleError(err))
     .catch((err) => next(err));
 };
@@ -63,7 +63,7 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
   { new: true },
 )
   .orFail(() => { throw (new ErrorHandler.NotFoundError('Карточка не найдена')); })
-  .then((cards) => res.send(cards))
+  .then((cards) => res.send(Object.values(cards)))
   .catch((err) => handleError(err))
   .catch((err) => next(err));
 
@@ -73,6 +73,6 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   { new: true },
 )
   .orFail(() => { throw (new ErrorHandler.NotFoundError('Карточка не найдена')); })
-  .then((cards) => res.send(cards))
+  .then((cards) => res.send(Object.values(cards)))
   .catch((err) => handleError(err))
   .catch((err) => next(err));
