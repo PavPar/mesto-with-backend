@@ -31,11 +31,22 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 const { PORT = '3000' } = process.env;
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 app.use(requestLogger);
 
 app.use(authRoutes);
 app.use(auth);
 app.use(routes);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
