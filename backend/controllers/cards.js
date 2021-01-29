@@ -27,7 +27,7 @@ const handleError = (err) => {
 
 module.exports.getCards = (req, res, next) => Card.find({})
   .then((cards) => {
-    res.send(cards);
+    res.send(Object.values(cards)[0]);
   })
   .catch((err) => next(err));
 
