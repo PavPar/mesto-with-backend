@@ -20,6 +20,6 @@ router.post('/cards/', celebrate({
 }), cardsController.createCard);
 router.delete('/cards/:cardId', cardsController.deleteCard);
 
-router.put('/cards/:cardId/likes', cardsController.likeCard);
-router.delete('/cards/:cardId/likes', cardsController.dislikeCard);
+router.put('/cards/likes/:cardId', cardsController.likeCard);
+router.delete('/cards/likes/:cardId', cardsController.dislikeCard);
 module.exports = router;
