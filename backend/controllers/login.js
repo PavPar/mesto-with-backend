@@ -11,7 +11,7 @@ const handleError = (err) => {
   if (err.name === 'CastError') {
     throw new ErrorHandler.NotFoundError('Такого пользователя нет');
   }
-  throw (err);
+  throw err;
 };
 
 module.exports.authUser = (req, res, next) => {
@@ -59,7 +59,11 @@ module.exports.createUser = (req, res, next) => {
           User.create({
             name, about, avatar, email, password: hash,
           })
-            .then((users) => res.send({ users }))
+            .then((user) => {
+              const userData = user.toObject();
+              delete userData.password;
+              res.send(userData);
+            })
             .catch((err) => handleError(err))
             .catch((err) => next(err));
         });

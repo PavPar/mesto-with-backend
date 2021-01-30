@@ -5,14 +5,25 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const { errors } = require('celebrate');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 const routes = require('./routes/index');
 const authRoutes = require('./routes/authRouter');
 const auth = require('./middlewares/auth');
+const ErrorHandler = require('./utils/errorHandler/ErrorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 require('dotenv').config({ path: path.join(__dirname, 'envVars.env') });
 
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 100,
+});
+
+app.use(limiter);
+app.use(helmet());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -45,16 +56,16 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+app.use('*', () => {
+  throw new ErrorHandler.NotFoundError('Запрашиваемый ресурс не найден');
 });
 
-app.use(errorLogger); // подключаем логгер ошибок
+app.use(errorLogger);
 app.use(errors());
 
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
-
   res
     .status(statusCode)
     .send({

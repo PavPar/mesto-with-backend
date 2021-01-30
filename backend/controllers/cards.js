@@ -21,7 +21,6 @@ const handleError = (err) => {
   if (err.name === 'OwnershipError') {
     throw new ErrorHandler.BadRequestError('Вы не являетесь владельцем карточки');
   }
-
   throw (err);
 };
 
@@ -34,8 +33,12 @@ module.exports.getCards = (req, res, next) => Card.find({})
 module.exports.deleteCard = (req, res, next) => {
   Card.findById({ _id: req.params.cardId })
     .then((card) => {
+      if (!card) {
+        throw (new ErrorHandler.NotFoundError('Карточка не найдена'));
+      }
+
       if (`${card.owner}` !== req.user._id) {
-        throw (new ErrorHandler.BadRequestError('Вы не являетесь владельцем карточки'));
+        throw (new ErrorHandler.ForbiddenError('Вы не являетесь владельцем карточки'));
       }
       Card.deleteOne({ _id: req.params.cardId })
         .then((cards) => {
@@ -46,6 +49,7 @@ module.exports.deleteCard = (req, res, next) => {
           res.send({ message: 'Карточка удалена' });
         });
     })
+    .catch((err) => handleError(err))
     .catch((err) => next(err));
 };
 
