@@ -13,8 +13,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const urlRegexp = /https?:\/\/[a-z0-9-\._~:\/?#\[\]@!\$&'\(\)\*\+,;=]+#?/im;
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -31,8 +29,8 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     validate: {
-      validator(avatar) {
-        return urlRegexp.test(avatar);
+      validator(uri) {
+        return validator.isURL(uri);
       },
     },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',

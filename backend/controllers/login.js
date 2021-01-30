@@ -50,7 +50,7 @@ module.exports.createUser = (req, res, next) => {
   User.exists({ email })
     .then((exists) => {
       if (exists) {
-        throw (new ErrorHandler.BadRequestError('Email занят'));
+        throw (new ErrorHandler.ConflictError('Email занят'));
       }
     })
     .then(() => {
