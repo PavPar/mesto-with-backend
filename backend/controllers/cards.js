@@ -34,7 +34,7 @@ module.exports.getCards = (req, res, next) => Card.find({})
 module.exports.deleteCard = (req, res, next) => {
   Card.findById({ _id: req.params.cardId })
     .then((card) => {
-      if (card.owner !== req.user._id) {
+      if (`${card.owner}` !== req.user._id) {
         throw (new ErrorHandler.BadRequestError('Вы не являетесь владельцем карточки'));
       }
       Card.deleteOne({ _id: req.params.cardId })
@@ -63,7 +63,7 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
   { new: true },
 )
   .orFail(() => { throw (new ErrorHandler.NotFoundError('Карточка не найдена')); })
-  .then((cards) => res.send(Object.values(cards)))
+  .then((cards) => res.send(cards))
   .catch((err) => handleError(err))
   .catch((err) => next(err));
 
@@ -73,6 +73,6 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   { new: true },
 )
   .orFail(() => { throw (new ErrorHandler.NotFoundError('Карточка не найдена')); })
-  .then((cards) => res.send(Object.values(cards)))
+  .then((cards) => res.send(cards))
   .catch((err) => handleError(err))
   .catch((err) => next(err));

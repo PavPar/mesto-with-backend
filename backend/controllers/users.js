@@ -45,7 +45,7 @@ module.exports.updateUserInfo = (req, res, next) => {
       runValidators: true,
     })
     .orFail(() => { throw new ErrorHandler.NotFoundError('Такого пользователя нет'); })
-    .then((users) => res.send(Object.values(users)))
+    .then((users) => res.send(users))
     .catch((err) => handleError(err))
     .catch((err) => next(err));
 };
@@ -58,7 +58,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       runValidators: true,
     })
     .orFail(() => { throw new ErrorHandler.NotFoundError('Такого пользователя нет'); })
-    .then((users) => res.send(Object.values(users)))
+    .then((users) => res.send(users))
     .catch((err) => handleError(err))
     .catch((err) => next(err));
 };
