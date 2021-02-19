@@ -1,5 +1,6 @@
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
 const User = require('../models/user');
 const ErrorHandler = require('../utils/errorHandler/ErrorHandler');
 
@@ -11,7 +12,29 @@ const handleError = (err) => {
   if (err.name === 'CastError') {
     throw new ErrorHandler.NotFoundError('Такого пользователя нет');
   }
-  throw err;
+
+  throw (err);
+};
+
+module.exports.getUser = (req, res, next) => {
+  User.findById(req.user._id)
+    .orFail(() => { throw new ErrorHandler.NotFoundError('Такого пользователя нет'); })
+    .then((userData) => res.send(userData))
+    .catch((err) => handleError(err))
+    .catch((err) => next(err));
+};
+
+module.exports.updateUser = (req, res, next) => {
+  const { name, email } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, email },
+    {
+      new: true,
+      runValidators: true,
+    })
+    .orFail(() => { throw new ErrorHandler.NotFoundError('Такого пользователя нет'); })
+    .then((users) => res.send(users))
+    .catch((err) => handleError(err))
+    .catch((err) => next(err));
 };
 
 module.exports.authUser = (req, res, next) => {
@@ -29,13 +52,13 @@ module.exports.authUser = (req, res, next) => {
       if (!matched) {
         throw new ErrorHandler.UnauthorizedError('Неправильные почта или пароль');
       }
-
       const token = jwt.sign(
         { _id: userID._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_LIFESPAN },
       );
       res.send({
         token,
       });
+
       return true;
     })
     .catch((err) => handleError(err))
@@ -44,7 +67,7 @@ module.exports.authUser = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const {
-    name, about, avatar, email, password,
+    name, email, password,
   } = req.body;
 
   User.exists({ email })
@@ -57,7 +80,7 @@ module.exports.createUser = (req, res, next) => {
       bcrypt.hash(password, 10)
         .then((hash) => {
           User.create({
-            name, about, avatar, email, password: hash,
+            name, email, password: hash,
           })
             .then((user) => {
               const userData = user.toObject();

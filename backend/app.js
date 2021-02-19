@@ -8,7 +8,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const routes = require('./routes/index');
-const authRoutes = require('./routes/authRouter');
+const authRoute = require('./routes/auth');
 const auth = require('./middlewares/auth');
 const ErrorHandler = require('./utils/errorHandler/ErrorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -28,7 +28,7 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -46,7 +46,7 @@ app.use(cors());
 
 app.use(requestLogger);
 
-app.use(authRoutes);
+app.use(authRoute);
 app.use(auth);
 app.use(routes);
 

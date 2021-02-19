@@ -1,14 +1,4 @@
 /* eslint-disable no-useless-escape */
-/*
-Поля схемы пользователя.
-
-    name — имя пользователя, строка от 2 до 30 символов, обязательное поле;
-    about — **информация о пользователе, строка от 2 до 30 символов, обязательное поле;
-    avatar — ссылка на аватарку, строка, обязательно поле.
-
-Для проверки данных поля avatar используйте регулярное выражение.
-
-*/
 
 const mongoose = require('mongoose');
 const validator = require('validator');
@@ -18,22 +8,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: 2,
     maxlength: 30,
-    default: 'Жак-Ив Кусто',
-  },
-  about: {
-    type: String,
-    minlength: 2,
-    maxlength: 30,
-    default: 'Исследователь',
-  },
-  avatar: {
-    type: String,
-    validate: {
-      validator(uri) {
-        return validator.isURL(uri);
-      },
-    },
-    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    required: true,
   },
   email: {
     type: String,
